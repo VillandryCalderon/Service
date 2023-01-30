@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: helloapp
+  namespace: argocd
+spec:
+  source:
+    path: application
+    repoURL: https://github.com/VillandryCalderon/Service.git
+    targetRevision: HEAD
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: kube-system
+  project: default
