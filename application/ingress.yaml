@@ -10,7 +10,7 @@ spec:
   rules:
   - http:
       paths:
-      - path: "/example-service2/*"
+      - path: "/example-service/*"
         backend:
           service:
             name: example-service
