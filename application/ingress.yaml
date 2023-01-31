@@ -8,12 +8,13 @@ metadata:
     appgw.ingress.kubernetes.io/backend-path-prefix: "/"
 spec:
   rules:
-  - http:
+  - host: "example.corp.redbac.com"
+    http:
       paths:
-      - path: "/example-service/*"
+      - path: "/"
         backend:
           service:
             name: example-service
             port:
               number: 80
-        pathType: Prefix
+        pathType: Exact
