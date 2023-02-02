@@ -1,11 +1,11 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: helloapp
+  name: helloapp2
   namespace: argocd
 spec:
   source:
-    path: application
+    path: application2
     repoURL: https://github.com/VillandryCalderon/Service.git
     targetRevision: HEAD
   destination:
