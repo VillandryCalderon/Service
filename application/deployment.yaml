@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: example-service
-  namespace: example-service
+  namespace: example-service2
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: example-service
+      app: example-service2
   template:
     metadata:
       labels:
-        app: example-service
+        app: example-service2
     spec:
       containers:
-        - name: example-service
+        - name: example-service2
           image: tutum/hello-world:latest
           ports:
             - containerPort: 80
