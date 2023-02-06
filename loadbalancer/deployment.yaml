@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loadbalancer-service
+  namespace: loadbalancer-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loadbalancer-service
+  template:
+    metadata:
+      labels:
+        app: loadbalancer-service
+    spec:
+      containers:
+        - name: loadbalancer-service
+          image: tutum/hello-world:latest
+          ports:
+            - containerPort: 80
