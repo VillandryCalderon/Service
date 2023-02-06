@@ -9,6 +9,6 @@ spec:
     repoURL: https://github.com/VillandryCalderon/Service.git
     targetRevision: HEAD
   destination:
-    server: 'https://aks-antstesdos-a5d2d769.hcp.centralus.azmk8s.io:443'
+    server: 'https://aks-antstesdos-dfce685b.hcp.centralus.azmk8s.io:443'
     namespace: kube-system
   project: default
