@@ -13,6 +13,12 @@ provider "azurerm" {
   features {}
 }
 
+#######Private DNS######################
+resource "azurerm_private_dns_zone" "example" {
+  name                = "privatelink.azurecr.io"
+  resource_group_name = var.rg_location_eastus2
+}
+
 resource "azurerm_virtual_network" "vnet_eastus2" {
   name                = "vnet-eastus2"
   address_space       = ["10.0.0.0/16"]
@@ -34,6 +40,13 @@ resource "azurerm_subnet" "subnet_service_east2" {
   address_prefixes     = ["10.0.1.0/24"]
 }
 
+resource "azurerm_subnet" "subnet_privateendpoint_east2" {
+  name                 = "subnet_privateendpoint_eastus2"
+  resource_group_name  = var.rg_location_eastus2
+  virtual_network_name = azurerm_virtual_network.vnet_eastus2.name
+  address_prefixes     = ["10.0.2.0/24"]
+}
+
 resource "azurerm_subnet" "subnet_service_centralus" {
   name                 = "subnet_service_centralus"
   resource_group_name  = var.rg_location_eastus2
@@ -47,11 +60,11 @@ resource "azurerm_container_registry" "acr01" {
   location                      = var.eastus2_location
   admin_enabled                 = true
   sku                           = "Premium"
-  public_network_access_enabled = true
-  georeplications {
-    location                = "Central US"
-    zone_redundancy_enabled = true
-  }
+  public_network_access_enabled = false
+ # georeplications {
+ #   location                = "Central US"
+ #   zone_redundancy_enabled = true
+ # }
 }
 
 resource "azurerm_network_interface" "example" {
@@ -89,6 +102,9 @@ resource "azurerm_linux_virtual_machine" "example" {
     offer     = "UbuntuServer"
     sku       = "16.04-LTS"
     version   = "latest"
+  }
+  identity {
+    type = "SystemAssigned"
   }
 }
 
@@ -145,3 +161,28 @@ resource "azurerm_public_ip" "examplecentral" {
 }
 
 
+resource "azurerm_private_endpoint" "acr" {
+  name                = "pvep-acr"
+  location            = var.eastus2_location
+  resource_group_name = var.rg_location_eastus2
+  subnet_id           = azurerm_subnet.subnet_service_east2.id
+
+  private_service_connection {
+    name                           = "serviceconnection-acr"
+    private_connection_resource_id = azurerm_container_registry.acr01.id
+    is_manual_connection           = false
+    subresource_names              = ["registry"]
+  }
+
+  private_dns_zone_group {
+    name                 = azurerm_private_dns_zone.example.name
+    private_dns_zone_ids = [azurerm_private_dns_zone.example.id]
+  }
+}
+
+#resource "azurerm_role_assignment" "acrpull" {
+#  principal_id                     = azurerm_linux_virtual_machine.example.identity[0].principal_id
+#  role_definition_name             = "AcrPull"
+#  scope                            = azurerm_linux_virtual_machine.example.id
+#  skip_service_principal_aad_check = true
+#}
