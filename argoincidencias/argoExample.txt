@@ -1,0 +1,7 @@
+Application (client) ID
+b26d9913-272b-41ff-a511-ddcb2cbb9938
+
+0mP8Q~7QNIBxCz488dVY1k.vT4cMTnf-AIu0JbJK
+Client Secret
+
+https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/user-management/microsoft.md#azure-ad-app-registration-auth-using-oidc
